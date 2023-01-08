@@ -44,6 +44,7 @@ public class UserApiController {
             }
             throw new CustomValidationApiException("유효성검사 실패", errorMap);
         } else {
+
             User userEntity = userService.회원수정(id, userUpdateDto.toEntity());
             principalDetails.setUser(userEntity);
             return new CMRespDto<>(1, "회원수정완료", userEntity);

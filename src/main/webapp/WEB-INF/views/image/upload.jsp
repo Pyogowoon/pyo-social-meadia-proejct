@@ -18,7 +18,8 @@
                 <!--사진업로드 로고 end-->
                 
                 <!--사진업로드 Form-->
-                <form class="upload-form" >
+                <form class="upload-form" action="/image" method="post" enctype="multipart/form-data">
+                       <!-- enctype이 multipart~ 인 이유는 input type="file"은 byte화 해서 전송하고 text는 key/value 여서 서로 방식이라 그렇다. -->
                     <input  type="file" name="file"  onchange="imageChoose(this)"/>
                     <div class="upload-img">
                         <img src="/images/person.jpeg" alt="" id="imageUploadPreview" />
@@ -26,7 +27,7 @@
                     
                     <!--사진설명 + 업로드버튼-->
                     <div class="upload-form-detail">
-                   		 <input type="text" placeholder="사진설명" name="caption">
+                   		 <input type="text" placeholder="사진설명" name="caption"/>
                         <button class="cta blue">업로드</button>
                     </div>
                     <!--사진설명end-->

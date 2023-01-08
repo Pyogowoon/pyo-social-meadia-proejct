@@ -4,7 +4,7 @@ function update(userId,event) {
 
         let data=$("#profileUpdate").serialize();
 
-        console.log(data);
+
 
         $.ajax({
 
@@ -18,7 +18,11 @@ function update(userId,event) {
              alert("수정에 성공하였습니다.");
              location.href=`/user/${userId}`;
         }).fail(error=>{ //Httpstatus 상태코드가 200번대가 아닐때 fail
-             alert("수정에 실패하였습니다.");
+            if(error.data == null){
+                alert(error.responseJSON.message);
+            }else{
+              alert(JSON.stringify(error.responseJSON.data));
+            }
 
         });
 

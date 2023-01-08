@@ -28,7 +28,7 @@ public class SecurityConfig {
 
         http.csrf().disable();
         http.authorizeRequests()
-                .antMatchers("/", "/user/**", "/image/**", "/subscribe/**", "/comment/**").authenticated()// 인증필요를 걸어둔것
+                .antMatchers("/", "/user/**", "/image/**", "/subscribe/**", "/comment/**","/api/**").authenticated()// 인증필요를 걸어둔것
                 .anyRequest().permitAll() //나머지 허용
                 .and()
                 .formLogin()
