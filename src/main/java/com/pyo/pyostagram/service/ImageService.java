@@ -2,6 +2,7 @@ package com.pyo.pyostagram.service;
 
 
 import com.pyo.pyostagram.config.auth.PrincipalDetails;
+import com.pyo.pyostagram.domain.image.Image;
 import com.pyo.pyostagram.domain.image.ImageRepository;
 import com.pyo.pyostagram.web.dto.image.ImageUploadDto;
 import lombok.RequiredArgsConstructor;
@@ -36,5 +37,9 @@ public class ImageService {
         }catch(Exception e){
                 e.printStackTrace();
         }
+        Image image = imageUploadDto.toEntity(imageFileName,principalDetails.getUser());
+        Image imageEntity = imageRepository.save(image);
+
+        System.out.println(imageEntity);
     }
 }
