@@ -8,6 +8,7 @@ import com.pyo.pyostagram.web.dto.image.ImageUploadDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -23,6 +24,8 @@ public class ImageService {
     @Value("${file.path}") // yml에 적힌값 가져오는거
     private String uploadFolder;
 
+
+    @Transactional
     public void 사진업로드(ImageUploadDto imageUploadDto, PrincipalDetails principalDetails){
        UUID uuid = UUID.randomUUID(); //uuid 하는 이유 = 만약 같은이름의 파일이 uuid 없이 올라온다면 덮어씌워지기 때문에
         String imageFileName= uuid+"_"+ imageUploadDto.getFile().getOriginalFilename(); //1.jpg
@@ -38,8 +41,8 @@ public class ImageService {
                 e.printStackTrace();
         }
         Image image = imageUploadDto.toEntity(imageFileName,principalDetails.getUser());
-        Image imageEntity = imageRepository.save(image);
+             imageRepository.save(image);
 
-        System.out.println(imageEntity);
+//        System.out.println(imageEntity);
     }
 }

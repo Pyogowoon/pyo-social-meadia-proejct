@@ -3,6 +3,7 @@ package com.pyo.pyostagram.web;
 
 import com.pyo.pyostagram.config.auth.PrincipalDetails;
 import com.pyo.pyostagram.domain.image.Image;
+import com.pyo.pyostagram.handler.ex.CustomValidationException;
 import com.pyo.pyostagram.service.ImageService;
 import com.pyo.pyostagram.web.dto.image.ImageUploadDto;
 import lombok.AllArgsConstructor;
@@ -38,9 +39,14 @@ public class ImageController {
 
     @PostMapping("/image")
     public String imageUpload(ImageUploadDto imageUploadDto , @AuthenticationPrincipal PrincipalDetails principalDetails){
-    //서비스 호출
+        //서비스 호출
+        if(imageUploadDto.getFile().isEmpty()){
+            throw new CustomValidationException("이미지가 첨부되지 않았습니다.",null);
+
+        }
+
         imageService.사진업로드(imageUploadDto,principalDetails);
-            return "redirect:/user/" +principalDetails.getUser().getId();
+        return "redirect:/user/" +principalDetails.getUser().getId();
     }
 }
 

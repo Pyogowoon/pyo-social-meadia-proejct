@@ -3,7 +3,9 @@ package com.pyo.pyostagram.service;
 
 import com.pyo.pyostagram.domain.user.User;
 import com.pyo.pyostagram.domain.user.UserRepository;
+import com.pyo.pyostagram.handler.ex.CustomException;
 import com.pyo.pyostagram.handler.ex.CustomValidationApiException;
+import com.pyo.pyostagram.web.dto.user.UserProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 
     @Transactional
     public User 회원수정(int id, User user) {
@@ -44,4 +47,20 @@ public class UserService {
         return userEntity;
     } // 더티체킹이 되서 업데이트가 완료됨
 
+
+    @Transactional(readOnly = true)
+    public UserProfileDto 회원프로필(int pageUserId, int principalId){
+        UserProfileDto dto = new UserProfileDto();
+
+
+        User userEntity = userRepository.findById(pageUserId).orElseThrow(() -> {
+          throw new CustomException("해당 프로필 페이지는 없는 페이지입니다");
+        });
+
+        dto.setUser(userEntity);
+        dto.setImageCount(userEntity.getImages().size());
+        dto.setPageOwnerState(pageUserId == principalId); // true면 주인
+
+        return dto;
+    }
 }
