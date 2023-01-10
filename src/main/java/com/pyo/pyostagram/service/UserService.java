@@ -1,6 +1,7 @@
 package com.pyo.pyostagram.service;
 
 
+import com.pyo.pyostagram.domain.subscribe.SubscribeRepository;
 import com.pyo.pyostagram.domain.user.User;
 import com.pyo.pyostagram.domain.user.UserRepository;
 import com.pyo.pyostagram.handler.ex.CustomException;
@@ -21,6 +22,8 @@ public class UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    private final SubscribeRepository subscribeRepository;
+
 
     @Transactional
     public User 회원수정(int id, User user) {
@@ -29,7 +32,6 @@ public class UserService {
                 .orElseThrow(() -> {
                     return new CustomValidationApiException("찾을 수 없는 id입니다.");
                 });
-
 
 
         //2. 영속화된 오브젝트를 수정 - 더티체킹(업데이트 완료
@@ -49,18 +51,24 @@ public class UserService {
 
 
     @Transactional(readOnly = true)
-    public UserProfileDto 회원프로필(int pageUserId, int principalId){
+    public UserProfileDto 회원프로필(int pageUserId, int principalId) {
         UserProfileDto dto = new UserProfileDto();
 
 
         User userEntity = userRepository.findById(pageUserId).orElseThrow(() -> {
-          throw new CustomException("해당 프로필 페이지는 없는 페이지입니다");
+            throw new CustomException("해당 프로필 페이지는 없는 페이지입니다");
         });
 
         dto.setUser(userEntity);
         dto.setImageCount(userEntity.getImages().size());
         dto.setPageOwnerState(pageUserId == principalId); // true면 주인
 
+
+        int subscribeState = subscribeRepository.mSubscribeState(principalId, pageUserId);
+        int subscribeCount = subscribeRepository.mSubscribeCount(pageUserId);
+
+        dto.setSubscribeCount(subscribeCount);
+        dto.setSubscribeState(subscribeState == 1);
         return dto;
     }
 }
