@@ -45,7 +45,7 @@ public class User {
     private LocalDateTime createDate;
 
 
-    @JsonIgnoreProperties("user")
+    @JsonIgnoreProperties({"user"})
     @OneToMany(mappedBy ="user", fetch= FetchType.LAZY)  //user는 Image의 변수를 넣어야함 //나는 연관관계의 주인이 아니다 를 알리는것.
     //이걸 함으로써 DB가 컬럼을 만들지않으며 select 할때 user Id로 등록된 image들을 다 가져옴
     // Lazy = User를 select할떄 해당 User id로 등록된 image들을 가져오지마 - 대신 getImages() 메소드가 호출될 때 가져와

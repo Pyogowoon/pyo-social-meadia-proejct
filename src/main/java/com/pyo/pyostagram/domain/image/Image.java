@@ -1,6 +1,8 @@
 package com.pyo.pyostagram.domain.image;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pyo.pyostagram.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,6 +26,7 @@ public class Image {
     private String postImageUrl;  // 사진을 전송받아서 그 사진을 서버에
     // 폴더에 저장하게될것 - DB에는 경로를 인서트
 
+    @JsonIgnoreProperties({"images"})
     @JoinColumn(name="userId") //foreign 키 이름 지정
     @ManyToOne // 한명이 많은 이미지를 올릴 수 있고 이미지는 하나의 이미지가 여럿일수없으니
     private User user; // db에 오브젝트 자체를 저장할 순 없고 이대로면 foreign key로 저장됨
