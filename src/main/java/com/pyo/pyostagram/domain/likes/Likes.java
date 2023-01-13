@@ -1,5 +1,6 @@
 package com.pyo.pyostagram.domain.likes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.pyo.pyostagram.domain.image.Image;
 import com.pyo.pyostagram.domain.user.User;
 import lombok.AllArgsConstructor;
@@ -29,10 +30,12 @@ public class Likes { // N
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+
     @JoinColumn(name="imageId")
     @ManyToOne
     private Image image; //1
 
+    @JsonIgnoreProperties({"images"})
     @JoinColumn(name="userId")
     @ManyToOne
     private User user;

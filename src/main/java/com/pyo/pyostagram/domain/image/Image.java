@@ -3,6 +3,7 @@ package com.pyo.pyostagram.domain.image;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pyo.pyostagram.domain.likes.Likes;
 import com.pyo.pyostagram.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 @NoArgsConstructor
@@ -32,10 +34,20 @@ public class Image {
     private User user; // db에 오브젝트 자체를 저장할 순 없고 이대로면 foreign key로 저장됨
 
     //이미지 좋아요
+    // image를 셀렉트할떄 likes 정보를 같이 들고옴
 
+    @JsonIgnoreProperties({"image"})
+    @OneToMany(mappedBy="image") //likes의 image변수 이름
+    private List<Likes> likes;
     //이미지 댓글
 
     private LocalDateTime createDate;
+
+    @Transient // DB에 칼럼이 만들어지지않는다
+    private boolean likeState;
+
+    @Transient
+    private int likeCount;
 
     @PrePersist
     public void createDate() {

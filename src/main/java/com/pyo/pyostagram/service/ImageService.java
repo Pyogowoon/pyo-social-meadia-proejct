@@ -54,6 +54,28 @@ public class ImageService {
     public Page<Image> 이미지스토리(int principalId , Pageable pageable) {
         Page<Image> images = imageRepository.mStroy(principalId,pageable);
 
+        // 2번으로 로그인 -> 2번이 구독한 이미지를 foreach로 쫙 뽑은다음 그 뽑은 이미지
+        //의 좋아요 정보를 2중 for문으로 가져와서 그 좋아요가 2번(cos)가 좋아요했는지 비교하면된다
+        //images에 좋아요 담아야함
+        images.forEach((image)-> {
+
+            image.setLikeCount(image.getLikes().size());
+
+            image.getLikes().forEach((like) ->{
+                if(like.getUser().getId()== principalId){
+                    // 해당 이미지에 좋아요 한 사람들을 찾아서 현재 로그인한 사람이 좋아요 한건지비교
+                    image.setLikeState(true);
+                }
+
+
+            });
+        });
         return images;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Image> 인기사진(){
+        return imageRepository.mPopular();
+
     }
 }
