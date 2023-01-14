@@ -2,7 +2,7 @@
 function update(userId,event) {
          event.preventDefault(); //폼 태그 액션 막기
 
-        let data=$("#profileUpdate").serialize();
+        let data=$("#profileUpdate").serialize(); // key=value 형태
 
 
 

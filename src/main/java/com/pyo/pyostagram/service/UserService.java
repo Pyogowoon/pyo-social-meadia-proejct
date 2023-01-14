@@ -4,14 +4,21 @@ package com.pyo.pyostagram.service;
 import com.pyo.pyostagram.domain.subscribe.SubscribeRepository;
 import com.pyo.pyostagram.domain.user.User;
 import com.pyo.pyostagram.domain.user.UserRepository;
+import com.pyo.pyostagram.handler.ex.CustomApiException;
 import com.pyo.pyostagram.handler.ex.CustomException;
 import com.pyo.pyostagram.handler.ex.CustomValidationApiException;
 import com.pyo.pyostagram.web.dto.user.UserProfileDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
@@ -23,6 +30,8 @@ public class UserService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final SubscribeRepository subscribeRepository;
+
+
 
 
     @Transactional
@@ -69,6 +78,43 @@ public class UserService {
 
         dto.setSubscribeCount(subscribeCount);
         dto.setSubscribeState(subscribeState == 1);
+
+
+        userEntity.getImages().forEach((image) -> {
+            image.setLikeCount(image.getLikes().size());
+
+        });
+
         return dto;
+    }
+
+    @Value("${file.path}") // yml에 적힌값 가져오는거
+    private String uploadFolder;
+
+
+    @Transactional
+    public User 회원프로필사진변경(int principalId, MultipartFile profileImageFile){
+        // 프로필 업로드랑 로직 동일함
+        UUID uuid = UUID.randomUUID(); // uuid
+        String imageFileName = uuid+"_"+ profileImageFile.getOriginalFilename();
+
+        Path imageFilePath = Paths.get(uploadFolder+imageFileName);
+
+        try{
+            Files.write(imageFilePath, profileImageFile.getBytes());
+        }catch(Exception e){
+            e.printStackTrace();
+
+        }
+
+            User userEntity = userRepository.findById(principalId).orElseThrow(()->{
+                return new CustomApiException("유저를 찾을 수 없습니다.");
+            });
+
+        userEntity.setProfileImageUrl(imageFileName);
+
+        return userEntity;
+        //더티체킹으로 업데이트 됨.
+
     }
 }

@@ -113,7 +113,16 @@ function getSubscribeModalItem(u) {
 //}
 
 // (3) 유저 프로파일 사진 변경 (완)
-function profileImageUpload() {
+function profileImageUpload(pageUserId , principalId) {
+        //데이터 잘 와지는지 테스트
+        console.log("pageUserId" , pageUserId);
+        console.log("principalId" , principalId);
+
+        if(pageUserId != principalId){
+            alert("아이디의 주인만 사진을 변경할 수 있습니다.");
+            return;
+        }
+
 	$("#userProfileImageInput").click();
 
 	$("#userProfileImageInput").on("change", (e) => {
@@ -124,12 +133,44 @@ function profileImageUpload() {
 			return;
 		}
 
-		// 사진 전송 성공시 이미지 변경
-		let reader = new FileReader();
+
+		//서버에 이미지를 전송해줘야함.
+
+		let profileImageForm = $("#userProfileImageForm")[0];
+		// 왜 뒤에 [0]을 붙였는지? == 콘솔에 입력해보니 배열로 리턴해주더라
+		// 배열 맨첫번째가 form값이고 뒤에값은 필요없기때문
+
+		console.log(profileImageForm)
+
+		//FormData 객체를 이용하면 form 태그의 필드와 그 값을 나타내는 일련의
+		//key/value 쌍을 담을 수 있다.
+		let formData = new FormData(profileImageForm);
+//		console.log("폼 데이타" , formData);
+
+		$.ajax({
+		    type: "put",
+		    url: `/api/user/${principalId}/profileImageUrl`,
+		    data: formData,
+		    contentType: false, //필수 이유 : 디폴트값이 www-x-urlencorded로 파싱되는것 방지
+            processData:false,   //필수  이유: contentType을 false로 줬을 떄 QueryString 자동설정됨. 해제
+            encType:"multipart/form-data",
+            dataType:"json"
+		}).done(res => {
+
+            // 사진 전송 성공시 이미지 변경
+		    let reader = new FileReader();
 		reader.onload = (e) => {
 			$("#userProfileImage").attr("src", e.target.result);
-		}
-		reader.readAsDataURL(f); // 이 코드 실행시 reader.onload 실행됨.
+		    }
+		    reader.readAsDataURL(f); // 이 코드 실행시 reader.onload 실행됨.
+
+		}).fail(error => {
+           console.log(error,"오류");
+		});
+
+
+
+
 	});
 }
 
