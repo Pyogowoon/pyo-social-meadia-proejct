@@ -33,6 +33,7 @@ public class ImageApiController {
         Page<Image> images = imageService.이미지스토리(principalDetails.getUser().getId(), pageable);
 
 
+
         return new ResponseEntity<>(new CMRespDto<>(1, "성공", images), HttpStatus.OK);
     }
 

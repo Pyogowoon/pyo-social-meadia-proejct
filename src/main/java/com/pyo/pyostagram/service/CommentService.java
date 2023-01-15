@@ -51,7 +51,8 @@ public class CommentService {
 
 
     @Transactional
-    public void 댓글삭제(){
-
+    public void 댓글삭제(int id){
+        commentRepository.deleteById(id);
+        //나중에 터지면 try catch 걸면됨
     }
 }

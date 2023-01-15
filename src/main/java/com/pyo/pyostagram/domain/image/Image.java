@@ -3,6 +3,7 @@ package com.pyo.pyostagram.domain.image;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.pyo.pyostagram.domain.comment.Comment;
 import com.pyo.pyostagram.domain.likes.Likes;
 import com.pyo.pyostagram.domain.user.User;
 import lombok.AllArgsConstructor;
@@ -39,7 +40,12 @@ public class Image {
     @JsonIgnoreProperties({"image"})
     @OneToMany(mappedBy="image") //likes의 image변수 이름
     private List<Likes> likes;
-    //이미지 댓글
+
+    //이미지 댓글 양뱡향 맵핑
+    @OrderBy("id DESC")
+    @JsonIgnoreProperties({"image"})
+    @OneToMany(mappedBy = "image")
+    private List<Comment> comments;
 
     private LocalDateTime createDate;
 
