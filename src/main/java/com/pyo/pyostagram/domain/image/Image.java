@@ -62,13 +62,7 @@ public class Image {
 
 
     // 오브젝트를 콘솔에 출력할 떄 문제가 될 수 있어서 User부분을 출력되지않게 함
-//    @Override
-//    public String toString() {
-//        return "Image{" +
-//                "id=" + id +
-//                ", caption='" + caption + '\'' +
-//                ", postImageUrl='" + postImageUrl + '\'' +
-//                ", createDate=" + createDate +
-//                '}';
-//    }
+
+
+
 }

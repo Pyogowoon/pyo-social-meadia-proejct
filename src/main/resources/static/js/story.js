@@ -196,9 +196,9 @@ function addComment(imageId) {
 	    imageId : imageId,
 		content: commentInput.val()
 	}
-            console.log(data);
-            console.log(JSON.stringify(data));
-          return;
+//            console.log(data);
+//            console.log(JSON.stringify(data));
+
 
 	if (data.content === "") {
 		alert("댓글을 작성해주세요!");
