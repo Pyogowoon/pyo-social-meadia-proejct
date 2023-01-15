@@ -1,6 +1,8 @@
 package com.pyo.pyostagram.config;
 
 
+import com.pyo.pyostagram.config.oauth.OAuth2DetailsService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,10 +13,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+@RequiredArgsConstructor
 @EnableWebSecurity
 @Configuration  // IoC
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+
+    private final OAuth2DetailsService oAuth2DetailsService;
 
     @Bean
     public AuthenticationManager authenticationManager
@@ -34,7 +39,15 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/auth/signin")  // 이건 get요청
                 .loginProcessingUrl("/auth/signin") //이건 post(로그인이니까) -> 스프링 시큐리티가 로그인 프로세스 진행
-                .defaultSuccessUrl("/");
+                .defaultSuccessUrl("/")
+
+                //oauth2 - 페이스북 로그인으로 인한 추가
+                .and()
+                .oauth2Login()
+                .userInfoEndpoint()
+                .userService(oAuth2DetailsService);
+
+
 
         return http.build();
     }
